@@ -1,0 +1,63 @@
+local Junkie = loadstring(game:HttpGet("https://jnkie.com/sdk/library.lua"))()
+
+Junkie.service = "key"
+Junkie.identifier = "1111239"
+Junkie.provider = "222"
+
+local UI = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/BlizTBr/scripts/refs/heads/main/Orion%20X"
+))()
+
+local Window = UI:MakeWindow({
+    Name = "VTX",
+})
+
+keygettab = Window:MakeTab({
+    Name = "Get Key",
+    Icon = "rbxassetid://10734949856",
+    PremiumOnly = false
+})
+
+local KeySection = keygettab:AddSection({
+    Name = "Auth",
+})
+
+KeySection:AddButton({
+    Name = "Copy Link Getkey",
+    Callback = function()
+        setclipboard("https://jnkie.com/get-key/vtx-keyless")
+    end,
+})
+
+local inputtedKey = ""
+
+KeySection:AddTextbox({
+    Name = "Key",
+    Callback = function(value)
+        inputtedKey = value
+    end,
+})
+
+KeySection:AddButton({
+    Name = "Execute",
+    Callback = function()
+        if inputtedKey == "" then
+            warn("Set Key First!")
+            return
+        end
+
+        local result = Junkie.check_key(inputtedKey)
+
+        if result and result.valid then
+            getgenv().SCRIPT_KEY = inputtedKey
+            print("Key valid!")
+            UI:Destroy()
+            loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/32cb934f5992903912479ac7e1be0b7ce1ecb1817de589e80f09d8003d295e71/download"))()
+        else
+            print("Invalid Key")
+            game:GetService("Players").LocalPlayer:Remove()
+        end
+    end,
+})
+
+UI:Init()
